@@ -7,7 +7,7 @@ import moment from "moment"
 import { Audio } from 'expo-av';
 
 import * as Speech from 'expo-speech';
-import {speak} from "expo-speech";
+
 //abcd
 
 
@@ -60,6 +60,8 @@ class RunTimerScreen extends Component {
         this.sound = new Audio.Sound();
         const status = {
             shouldPlay: false,
+            playsInSilentModeIOS: true
+
         };
 
         this.sound.loadAsync(require('../assets/bell.mp3'), status, false);
@@ -123,7 +125,8 @@ class RunTimerScreen extends Component {
 
 
     playTone () {
-        this.sound.playAsync();
+        this.sound.replayAsync();
+
     }
 
     playDelayed(){
@@ -148,9 +151,12 @@ class RunTimerScreen extends Component {
                     this.state.eventDate = moment.duration().add({days:0,hours:0,minutes:0,seconds:this.state.tasks[this.state.currentTask].timeSeconds});
                     this.state.currentTaskName = this.state.tasks[this.state.currentTask].taskName;
                     this.state.image = this.state.tasks[this.state.currentTask].image;
-                    this.startTimer()
                     this.playTone()
+                    this.startTimer()
+
                 }
+                this.playTone()
+
 
 
 
