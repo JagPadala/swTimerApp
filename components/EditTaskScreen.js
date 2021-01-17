@@ -20,7 +20,8 @@ class EditTaskScreen extends Component {
         this.state = {
             isLoading: true,
             tasks: {},
-            key: ''
+            key: '',
+            image: '',
         };
     }
 
@@ -140,7 +141,7 @@ class EditTaskScreen extends Component {
             console.log(doc.id);
             console.log(JSON.parse(navigation.getParam('taskkey')));
             if (JSON.parse(navigation.getParam('taskkey')) == doc.id) {
-                console.log("Identified task");
+                console.log("Identified task",doc.data());
                 const task = doc.data();
                 this.setState({
                     key: JSON.parse(navigation.getParam('timerkey')),
@@ -150,6 +151,9 @@ class EditTaskScreen extends Component {
                     sequenceNumber: task.sequenceNumber,
                     image: task.image,
                 });
+                if (!task.image) {
+                    this.state.image='';
+                }
             }
             tasks.push({
                 key: doc.id,
@@ -197,7 +201,8 @@ class EditTaskScreen extends Component {
         updateRef.set({
             taskName: this.state.taskName,
             timeSeconds: this.state.timeSeconds,
-            sequenceNumber: this.state.sequenceNumber
+            sequenceNumber: this.state.sequenceNumber,
+            image: this.state.image,
         }).then((docRef) => {
             console.log("null ref");
             this.setState({
@@ -233,8 +238,17 @@ class EditTaskScreen extends Component {
                 <View style={styles.subContainer}>
                     <TextInput
                         placeholder={'Name'}
-                        value={this.state.name}
-                        onChangeText={(text) => this.updateTextInput(text, 'name')}
+                        value={this.state.taskName}
+                        style={{height: 40,
+                           }}
+                        onChangeText={(text) => this.updateTextInput(text, 'taskName')}
+                    />
+                    <TextInput
+                        placeholder={'Time'}
+                        style={{height: 40,}}
+                        value={this.state.timeSeconds}
+                        onChangeText={(text) => this.updateTextInput(text, 'timeSeconds')}
+                        keyboardType={'numeric'}
                     />
                 </View>
                 <View>
@@ -284,23 +298,30 @@ class EditTaskScreen extends Component {
             <ScrollView style={styles.container}>
                 <View style={styles.subContainer}>
                     <TextInput
-                        placeholder={'Sequence'}
-                        value={this.state.sequenceNumber}
-                        onChangeText={(text) => this.updateTextInput(text, 'sequenceNumber')}
-                        keyboardType={'numeric'}
-                    />
-                    <TextInput
                         placeholder={'Task'}
+                        style={{height: 40,
+                            borderColor: 'gray',
+                            borderWidth: 1,}}
                         value={this.state.taskName}
                         onChangeText={(text) => this.updateTextInput(text, 'taskName')}
                     />
                     <TextInput
                         placeholder={'Time'}
+                        style={{height: 40,
+                            borderColor: 'gray',
+                            borderWidth: 1,}}
                         value={this.state.timeSeconds}
                         onChangeText={(text) => this.updateTextInput(text, 'timeSeconds')}
                         keyboardType={'numeric'}
                     />
 
+                </View>
+                <View >
+
+                    {this._maybeRenderImage()}
+                    {this._maybeRenderUploadingOverlay()}
+
+                    <StatusBar barStyle="default" />
                 </View>
 
                 <View style={styles.button}>

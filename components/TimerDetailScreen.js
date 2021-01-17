@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
-import { StyleSheet, ScrollView, ActivityIndicator, View } from 'react-native';
-import {  ListItem, Text, Card, Button , Icon, Avatar} from 'react-native-elements';
+import { StyleSheet, ScrollView, ActivityIndicator, View  , TouchableOpacity} from 'react-native';
+import {  ListItem, Text, Card, Button , Avatar} from 'react-native-elements';
 import firebase from '../Firebase';
 import {  Alert } from "react-native";
+import DraggableFlatList from 'react-native-draggable-flatlist'
+import Image from "react-native-web/dist/exports/Image";
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 class TimerDetailScreen extends Component {
 
@@ -20,8 +23,93 @@ class TimerDetailScreen extends Component {
         this.state = {
             isLoading: true,
             timers: {},
-            key: ''
+            key: '',
         };
+    }
+
+    renderItem = ({ item , sequenceNumber, drag, isActive}) => {
+        return (
+            <TouchableOpacity
+                style={{
+                    height: 50,
+                    marginBottom : 15,
+                    borderColor : 'blue',
+                    backgroundColor: isActive ? "blue" : item.backgroundColor,
+                    alignItems: "left",
+                    justifyContent: "left",
+                    borderBottomColor: 'gray',
+                    borderBottomWidth: 1,
+                }}
+                onLongPress={drag}
+
+            >
+
+                    <View style={styles.rowStyle}>
+                        <View style={{flex:.15 , marginLeft:10}} >
+                            <Image
+                                style={styles.tinyLogo}
+                                source={{
+                                    uri: item.image,
+                                }}
+                            />
+                        </View>
+                        <View style={{flex:.5}} >
+                            <Text
+                                style={{
+                                    color: "black",
+                                    fontSize: 15
+                                }}
+                            >
+                                {item.taskName}
+                            </Text>
+                        </View>
+                        <View style={{flex:.2 }} >
+                            <Text
+                                style={{
+                                    color: "black",
+                                    fontSize: 15
+                                }}
+                            >
+                                {item.timeSeconds} Secs
+                            </Text>
+                        </View>
+
+                        <View style={{flex:.1 ,margin:-5}} >
+                            <Icon.Button
+                                name="edit"
+                                size={16}
+                                color="gray"
+                                style={{
+                                    paddingBottom: 5
+                                }}
+                                backgroundColor="white"
+                                onPress={() => {
+                                    this.props.navigation.navigate('EditTask', {
+                                        timerkey: `${JSON.stringify(this.state.key)}`,
+                                        taskkey : `${JSON.stringify(item.key)}`,
+                                    });
+                                }}
+                            >
+
+                            </Icon.Button>
+                         </View>
+                        <View style={{flex:.1,margin:-5 }} >
+                            <Icon.Button
+                                name="remove"
+                                size={16}
+                                color="gray"
+                                backgroundColor="white"
+                                onPress={() => this.deleteTask(this.state.key,item.key)}
+                            >
+
+                            </Icon.Button>
+                        </View>
+
+                    </View>
+
+
+            </TouchableOpacity>
+        )
     }
 
     componentDidMount() {
@@ -98,6 +186,26 @@ class TimerDetailScreen extends Component {
 
     }
 
+    deleteTask(key,taskKey) {
+        const { navigation } = this.props;
+        this.setState({
+            isLoading: true
+        });
+        firebase.firestore().collection('timers').doc(key).collection('tasks').doc(taskKey).delete().then(() => {
+            console.log("Document successfully deleted!");
+            this.setState({
+                isLoading: false
+            });
+
+        }).catch((error) => {
+            console.error("Error removing document: ", error);
+            this.setState({
+                isLoading: false
+            });
+        });
+
+    }
+
     createTwoButtonAlert(key) {
         console.log("In the alert function",key);
         //alert('Alert with one button');
@@ -119,7 +227,56 @@ class TimerDetailScreen extends Component {
         );
     }
 
+    reorder(data) {
+        const newTasks = data;
+        console.log("new tasks ",newTasks);
+        const taskList=[];
 
+        const arrayLength = newTasks.length;
+        console.log("new tasks length ",newTasks.length);
+        for (let i = 0; i < arrayLength; i++) {
+            console.log("Setting up task ");
+            console.log(newTasks[i]);
+            const task={};
+            task.taskName = newTasks[i].taskName;
+            task.timeSeconds = newTasks[i].timeSeconds;
+            task.sequenceNumber = i;
+            task.key = newTasks[i].key;
+            task.doc = newTasks[i].doc;
+            if  (newTasks[i].image) {task.image = newTasks[i].image;};
+            if  (!newTasks[i].image) {task.image = '';};
+            taskList.push(task);
+            if (task.key && task.key.length>0) {
+
+                const updateRef = firebase.firestore().collection('timers').doc(this.state.key).collection('tasks').doc(task.key);
+                updateRef.set({
+                    taskName: task.taskName,
+                    timeSeconds: task.timeSeconds,
+                    sequenceNumber: task.sequenceNumber,
+                    image: task.image
+                }).then((docRef) => {
+                    console.log("null ref");
+
+
+                })
+                    .catch((error) => {
+                        console.error("Error adding document: ", error);
+                        this.setState({
+                            isLoading: false,
+                        });
+                    });
+            }
+
+        }
+
+
+
+        console.log("ordered tasks ",taskList);
+        this.setState({
+            tasks : taskList
+        });
+        console.log("this.state.tasks ",this.state.tasks);
+    }
 
 
 
@@ -134,44 +291,17 @@ class TimerDetailScreen extends Component {
         return (
             <ScrollView>
                 <Card style={styles.container}>
-                    <View style={styles.subContainer}>
 
+                        <View style={{ flex: 1 }}>
+                            <DraggableFlatList
+                                data={this.state.tasks}
+                                renderItem={this.renderItem}
+                                keyExtractor={(item, sequenceNumber) => `draggable-item-${item.sequenceNumber}`}
+                                onDragEnd={({ data }) => this.reorder(data)}
 
-                        {
-                            this.state.tasks.map((item, i) => (
-                                <ListItem
-                                    key={i}
-                                    bottomDivider
-                                    onPress={() => {
-                                        console.log("pressed on details");
-                                        this.props.navigation.navigate('EditTask', {
-                                            taskkey: `${JSON.stringify(item.key)}`,
-                                            timerkey: `${JSON.stringify(this.state.timerkey)}`,
-                                        });
-                                    }}
+                            />
+                        </View>
 
-                                >
-                                    <Avatar rounded title="T" source={{uri: item.image}} />
-                                    <ListItem.Content>
-                                        <ListItem.Title >{item.sequenceNumber}  {item.taskName}</ListItem.Title>
-                                        <ListItem.Subtitle >{item.timeSeconds}  Seconds</ListItem.Subtitle>
-                                    </ListItem.Content>
-                                    <ListItem.Chevron />
-                                </ListItem>
-
-                                // <ListItem key={i} bottomDivider >
-                                //     <ListItem.Content>
-                                //         <ListItem.Title >{item.name}</ListItem.Title>
-//
-                                //    </ListItem.Content>
-
-                                //  </ListItem>
-
-
-                            ))
-                        }
-
-                    </View>
                     <View style={styles.detailButton}>
                         
                         <View style={{flex:1 , marginLeft:10}} >
@@ -258,12 +388,20 @@ const styles = StyleSheet.create({
     detailButton: {
         marginTop: 10,
         flexDirection: 'row' },
+    tinyLogo: {
+        width: 30,
+        height: 30,
+    },
+    rowStyle: {
+        marginTop: 10,
+        marginBottom: 20,
 
-               containerAlert: {
-                   flex: 1,
-                   justifyContent: "space-around",
-                   alignItems: "center"
-               }
+        flexDirection: 'row' },
+    containerAlert: {
+        flex: 1,
+        justifyContent: "space-around",
+        alignItems: "center"
+    }
 
 })
 

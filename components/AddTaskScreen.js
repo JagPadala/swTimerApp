@@ -35,7 +35,7 @@ class AddTaskScreen extends Component {
         const newTask = this.ref.add({
             taskName: this.state.taskName,
             timeSeconds: this.state.timeSeconds,
-            sequenceNumber: Number(this.state.sequenceNumber),
+            sequenceNumber: Number(1000),
             image: this.state.image,
         }).then((docRef) => {
 
@@ -154,17 +154,18 @@ class AddTaskScreen extends Component {
             <ScrollView style={styles.container}>
                 <View style={styles.subContainer}>
                     <TextInput
-                        placeholder={'Sequence'}
-                        value={this.state.sequenceNumber}
-                        onChangeText={(text) => this.updateTextInput(text, 'sequenceNumber')}
-                    />
-                    <TextInput
                         placeholder={'Task'}
                         value={this.state.taskName}
+                        style={{height: 40,
+                                borderColor: 'gray',
+                                borderWidth: 1,}}
                         onChangeText={(text) => this.updateTextInput(text, 'taskName')}
                     />
                     <TextInput
                         placeholder={'Time in seconds'}
+                        style={{height: 40,
+                            borderColor: 'gray',
+                            borderWidth: 1,}}
                         value={this.state.timeSeconds}
                         onChangeText={(text) => this.updateTextInput(text, 'timeSeconds')}
                     />
