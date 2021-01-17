@@ -35,8 +35,10 @@ class RunTimerScreen extends Component {
             days:0,
             hours:0,
             mins:0,
-            secs:0
+            secs:0,
+            timerCompleted : false
         };
+
     }
 
     componentDidMount() {
@@ -98,7 +100,8 @@ class RunTimerScreen extends Component {
             tasks : tasks,
             numberOfTasks : tasks.length,
             currentTask : 0,
-            playing : false
+            playing : false,
+            timerCompleted : false
         });
 
 
@@ -155,7 +158,14 @@ class RunTimerScreen extends Component {
                     this.startTimer()
 
                 }
-                this.playTone()
+                if (eventDate <=0 && this.state.currentTask == this.state.tasks.length)
+                {
+                    this.state.currentTask --;
+                    this.setState({timerCompleted:true});
+                    console.log("Timer done");
+                    this.playTone()
+                }
+
 
 
 
@@ -191,6 +201,7 @@ class RunTimerScreen extends Component {
             this.state.currentTaskName = this.state.tasks[0].taskName;
             this.state.playing = true;
             this.startTimer()
+            this.playTone()
 
         } else {
             this.startTimer()
@@ -303,14 +314,19 @@ class RunTimerScreen extends Component {
                         </View>
 
 
-                        {!this.state.sessionInProgress && this.state.numberOfTasks > 0 &&
+                        {!this.state.sessionInProgress && this.state.numberOfTasks > 0 && !this.state.timerCompleted &&
                         <TouchableOpacity style={styles.beginButton} onPress={this.beginSession}>
                             <Text style={styles.colorWhite}>Start</Text>
                         </TouchableOpacity>
                         }
-                        { this.state.sessionInProgress &&
+                        { this.state.sessionInProgress && this.state.numberOfTasks > 0 && !this.state.timerCompleted &&
                         <TouchableOpacity style={styles.stopButton} onPress={this.stopSession}>
                             <Text style={styles.colorWhite}>Pause</Text>
+                        </TouchableOpacity>
+                        }
+                         { this.state.timerCompleted && this.state.numberOfTasks > 0 &&
+                         <TouchableOpacity style={styles.beginButton} onPress={this.stopSession}>
+                            <Text style={styles.colorWhite}>Great Job !</Text>
                         </TouchableOpacity>
                         }
 
@@ -352,7 +368,7 @@ const styles = StyleSheet.create({
         top: 0,
         height: 60,
         width: '100%',
-        backgroundColor: '#4CAF50'
+        backgroundColor: '#4CAF50',
     },
     headerText: {
         fontSize: 24,

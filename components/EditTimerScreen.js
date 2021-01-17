@@ -29,8 +29,10 @@ class EditTimerScreen extends Component {
                 this.setState({
                     key: doc.id,
                     name: timer.name,
-                    isLoading: false
+                    isLoading: false,
+                    image: timer.image
                 });
+                if (!timer.image) {this.state.image=''};
             } else {
                 console.log("No such document!");
             }

@@ -318,7 +318,7 @@ class TimerDetailScreen extends Component {
                                     color="white"
                                 />
                             }
-                            title="    Add Timer"
+                            title="    Add Task"
                             onPress={() => {
                                 this.props.navigation.navigate('AddTask', {
                                     timerkey: `${JSON.stringify(this.state.timerkey)}`,
