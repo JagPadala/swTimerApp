@@ -35,8 +35,6 @@ class TimerDetailScreen extends Component {
                     marginBottom : 15,
                     borderColor : 'blue',
                     backgroundColor: isActive ? "blue" : item.backgroundColor,
-                    alignItems: "left",
-                    justifyContent: "left",
                     borderBottomColor: 'gray',
                     borderBottomWidth: 1,
                 }}
@@ -45,15 +43,21 @@ class TimerDetailScreen extends Component {
             >
 
                     <View style={styles.rowStyle}>
-                        <View style={{flex:.15 , marginLeft:10}} >
-                            <Image
-                                style={styles.tinyLogo}
+                        <View style={{flex:.1}} >
+                            <Avatar
                                 source={{
-                                    uri: item.image,
+                                    uri:
+                                        item.image,
                                 }}
-                            />
+                            >
+
+                            </Avatar>
+
+
                         </View>
                         <View style={{flex:.5}} >
+
+
                             <Text
                                 style={{
                                     color: "black",
@@ -73,7 +77,6 @@ class TimerDetailScreen extends Component {
                                 {item.timeSeconds} Secs
                             </Text>
                         </View>
-
                         <View style={{flex:.1 ,margin:-5}} >
                             <Icon.Button
                                 name="edit"
@@ -92,7 +95,7 @@ class TimerDetailScreen extends Component {
                             >
 
                             </Icon.Button>
-                         </View>
+                        </View>
                         <View style={{flex:.1,margin:-5 }} >
                             <Icon.Button
                                 name="remove"
