@@ -2,7 +2,7 @@
   "expo": {
     "name": "timerApp",
     "slug": "timerApp",
-    "version": "1.0.8",
+    "version": "1.0.9",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -17,13 +17,18 @@
       "**/*"
     ],
     "ios": {
+
       "bundleIdentifier": "example.expo.googlesignin",
       "config": {
         "googleSignIn": {
           "reservedClientId": "<YOUR_REVERSED_IOS_CLIENT_ID>"
         }
       },
-      "googleServicesFile": "./GoogleService-Info.plist"
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "supportsTablet": true,
+      "bundleIdentifier": "com.sw1",
+      "buildNumber": "1.0.9"
+
     },
     "android": {
       "adaptiveIcon": {
