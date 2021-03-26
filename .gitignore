@@ -2,6 +2,7 @@
 ./expo/*
 expo/
 ./expo
+/expo/
 node_modules/
 ./node_modules/*
 .expo/packager-info.json
