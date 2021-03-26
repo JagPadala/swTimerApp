@@ -9,7 +9,10 @@ import AddTaskScreen from './components/AddTaskScreen';
 import AddTimerScreen from './components/AddTimerScreen';
 import EditTimerScreen from './components/EditTimerScreen';
 import RunTimerScreen from './components/RunTimerScreen';
+import * as AppAuth from 'expo-app-auth';
 
+import { Text } from 'react-native';
+import * as GoogleSignIn from 'expo-google-sign-in';
 
 const RootStack =  createAppContainer(
     createStackNavigator(
@@ -72,3 +75,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+const { URLSchemes } = AppAuth;
