@@ -21,7 +21,7 @@
       "bundleIdentifier": "example.expo.googlesignin",
       "config": {
         "googleSignIn": {
-          "reservedClientId": "<YOUR_REVERSED_IOS_CLIENT_ID>"
+          "reservedClientId": "com.googleusercontent.apps.827071971350-ki6ap65f5j68e4gopi21fbhumnisjips"
         }
       },
       "googleServicesFile": "./GoogleService-Info.plist",
