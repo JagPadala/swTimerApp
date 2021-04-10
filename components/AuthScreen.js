@@ -13,7 +13,7 @@ const AuthScreen = ({ navigation }) => {
             if (type === "success") {
                 // Then you can use the Google REST API
                 console.log("LoginScreen.js 17 | success, navigating to profile");
-                navigation.navigate("Profile", { user });
+                navigation.navigate("Timer", { user });
             }
         } catch (error) {
             console.log("LoginScreen.js 19 | error with login", error);
@@ -23,6 +23,7 @@ const AuthScreen = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <Button title="Login" onPress={signInAsync} />
+            
         </View>
     );
 

@@ -24,7 +24,7 @@
           "reservedClientId": "com.googleusercontent.apps.827071971350-ki6ap65f5j68e4gopi21fbhumnisjips"
         }
       },
-      "googleServicesFile": "./GoogleService-Info.plist",
+      //"googleServicesFile": "./GoogleService-Info.plist",
       "supportsTablet": true,
       "bundleIdentifier": "com.sw1",
       "buildNumber": "1.0.8"
