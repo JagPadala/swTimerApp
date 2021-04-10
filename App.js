@@ -9,9 +9,10 @@ import AddTaskScreen from './components/AddTaskScreen';
 import AddTimerScreen from './components/AddTimerScreen';
 import EditTimerScreen from './components/EditTimerScreen';
 import RunTimerScreen from './components/RunTimerScreen';
-import * as AppAuth from 'expo-app-auth';
+import AuthScreen from './components/AuthScreen';
 
-import { Text } from 'react-native';
+
+
 import * as GoogleSignIn from 'expo-google-sign-in';
 
 const RootStack =  createAppContainer(
@@ -24,9 +25,10 @@ const RootStack =  createAppContainer(
             AddTask:  AddTaskScreen,
             EditTimer: EditTimerScreen,
             RunTimer: RunTimerScreen,
+            Auth: AuthScreen
         },
         {
-            initialRouteName: 'Timer',
+            initialRouteName: 'Auth',
             navigationOptions: {
                 headerStyle: {
                     backgroundColor: '#777777',
@@ -49,6 +51,7 @@ const RootStack1 = createStackNavigator(
     },
     {
       initialRouteName: 'Timer',
+        
       navigationOptions: {
         headerStyle: {
           backgroundColor: '#777777',
@@ -76,4 +79,4 @@ const styles = StyleSheet.create({
   },
 });
 
-const { URLSchemes } = AppAuth;
+//const { URLSchemes } = AppAuth;

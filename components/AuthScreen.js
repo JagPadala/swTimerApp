@@ -1,53 +1,34 @@
-import React from 'react';
-import { Text } from 'react-native';
-import * as GoogleSignIn from 'expo-google-sign-in';
+import React from "react";
+import { StyleSheet, View, Button } from "react-native";
+import * as Google from "expo-google-app-auth";
 
-export default class AuthScreen extends React.Component {
-    state = { user: null };
-
-    componentDidMount() {
-        this.initAsync();
-    }
-
-    initAsync = async () => {
-        await GoogleSignIn.initAsync({
-            // You may ommit the clientId when the firebase `googleServicesFile` is configured
-            clientId: '<YOUR_IOS_CLIENT_ID>',
-        });
-        this._syncUserWithStateAsync();
-    };
-
-    _syncUserWithStateAsync = async () => {
-        const user = await GoogleSignIn.signInSilentlyAsync();
-        this.setState({ user });
-    };
-
-    signOutAsync = async () => {
-        await GoogleSignIn.signOutAsync();
-        this.setState({ user: null });
-    };
-
-    signInAsync = async () => {
+const AuthScreen = ({ navigation }) => {
+    const signInAsync = async () => {
         try {
-            await GoogleSignIn.askForPlayServicesAsync();
-            const { type, user } = await GoogleSignIn.signInAsync();
-            if (type === 'success') {
-                this._syncUserWithStateAsync();
+            const { type, user } = await Google.logInAsync({
+                iosClientId: `827071971350-ki6ap65f5j68e4gopi21fbhumnisjips.apps.googleusercontent.com`,
+                //androidClientId: `<YOUR_ANDROID_CLIENT_ID>`,
+            });
+
+            if (type === "success") {
+                // Then you can use the Google REST API
+                console.log("LoginScreen.js 17 | success, navigating to profile");
+                navigation.navigate("Profile", { user });
             }
-        } catch ({ message }) {
-            alert('login: Error:' + message);
+        } catch (error) {
+            console.log("LoginScreen.js 19 | error with login", error);
         }
     };
 
-    onPress = () => {
-        if (this.state.user) {
-            this.signOutAsync();
-        } else {
-            this.signInAsync();
-        }
-    };
+    return (
+        <View style={styles.container}>
+            <Button title="Login" onPress={signInAsync} />
+        </View>
+    );
 
-    render() {
-        return <Text onPress={this.onPress}>Toggle Auth</Text>;
-    }
-}
+
+};
+
+export default AuthScreen;
+
+const styles = StyleSheet.create({});

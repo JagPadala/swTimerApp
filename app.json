@@ -35,7 +35,7 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "example.expo.googlesignin",
-      "googleServicesFile": "./google-services.json"
+
     },
     "web": {
       "favicon": "./assets/favicon.png"
